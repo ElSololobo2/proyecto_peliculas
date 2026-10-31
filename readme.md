@@ -47,8 +47,23 @@ Antes de ejecutar el proyecto en tu computadora, asegúrate de tener instalado:
 Sigue estos pasos para clonar y poner en marcha el proyecto en tu equipo:
 ******
 🐻🪿IMPORTANTE 🐢🦆
+* Cuando coloques cambios, para no tener errores tienes que usar 
+```
+cd proyecto_peliculas
+```
+para que estes en la carpeta de proyectos.
 * Antes de empezar tienes que descargar esto: https://git--scm-com.translate.goog/install/windows?_x_tr_sl=en&_x_tr_tl=es&_x_tr_hl=es&_x_tr_pto=tc 
 * Descargar el git for windows/x64 Setup. Instalalo sin modificar nada, dale a continuar tal y como dice en la instalación.
+* Cuando vas a realizar un cambio por primera vez no te dejará, porque no tienes tu usuario y contraseña configurados. Entra en el cmd y coloca los datos de tu cuenta de github:
+```
+git config --global user.name "ElSololobo2"
+git config --global user.email "tu_correo@example.com"
+```
+Despues de esto pon el siguiente codigo:
+```
+git config --global --list
+```
+Y veras si tu usuario y contrase;a estan configurados correctamente.
 * Cada que entres a realizar alguna modificación tienes que poner el siguiente código 
 ``` venv\Scripts\activate``` 
 para que no tengas errores.
