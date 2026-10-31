@@ -8,8 +8,8 @@
            1. Estilos Globales (Fondo Relajante)
            ========================================================================== */
         body {
-            background-color: #0F172A; /* Azul oscuro medianoche muy suave para los ojos */
-            color: #E2E8F0;            /* Texto gris claro/platino de alta legibilidad */
+            background-color: #0F172A; /* Azul oscuro medianoche */
+            color: #E2E8F0;            /* Texto gris claro/platino */
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             line-height: 1.5;
             margin: 0;
@@ -17,7 +17,7 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
         }
 
@@ -44,7 +44,7 @@
            2. Formulario de Registro Estilizado
            ========================================================================== */
         .form-section {
-            background-color: #1E293B; /* Tarjeta ligeramente más clara para contraste */
+            background-color: #1E293B;
             padding: 25px;
             border-radius: 8px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
@@ -58,30 +58,12 @@
             display: block;
             font-weight: 600;
             margin-bottom: 6px;
-            color: #38BDF8; /* Azul cielo sutil para identificar rápido el campo */
+            color: #38BDF8; /* Azul cielo */
         }
 
         input[type="text"],
-        textarea {
-            width: 100%;
-            padding: 10px;
-            background-color: #0F172A;
-            border: 1px solid #334155;
-            border-radius: 6px;
-            color: #FFFFFF;
-            font-size: 1rem;
-            box-sizing: border-box;
-            transition: border-color 0.2s;
-        }
-
-        /* Efecto cuando haces clic para escribir */
-        input[type="text"]:focus,
-        textarea:focus {
-            outline: none;
-            border-color: #2563EB; 
-        }
-
         input[type="number"],
+        select,
         textarea {
             width: 100%;
             padding: 10px;
@@ -94,15 +76,16 @@
             transition: border-color 0.2s;
         }
 
-        /* Efecto cuando haces clic para escribir */
+        input[type="text"]:focus,
         input[type="number"]:focus,
+        select:focus,
         textarea:focus {
             outline: none;
             border-color: #2563EB; 
         }
 
         button[type="submit"] {
-            background-color: #2563EB; /* Botón azul llamativo pero no chillón */
+            background-color: #2563EB;
             color: white;
             border: none;
             padding: 12px 20px;
@@ -115,11 +98,11 @@
         }
 
         button[type="submit"]:hover {
-            background-color: #1D4ED8; /* Se oscurece un poco al pasar el mouse */
+            background-color: #1D4ED8;
         }
 
         /* ==========================================================================
-           3. Tabla de Catálogo Moderna
+           3. Tabla de Catálogo Moderna y Badges
            ========================================================================== */
         .table-responsive {
             overflow-x: auto;
@@ -148,12 +131,10 @@
             letter-spacing: 0.5px;
         }
 
-        /* Líneas divisorias sutiles entre filas */
         tr {
             border-bottom: 1px solid #334155;
         }
 
-        /* Efecto cebra: cambia de color filas alternas para leer mejor */
         tbody tr:nth-child(even) {
             background-color: #1E293B;
         }
@@ -166,13 +147,33 @@
             color: #FFFFFF;
         }
 
-        /* Una etiqueta visual bonita para los géneros */
         .badge-genero {
             background-color: #0284C7;
             color: white;
             padding: 3px 8px;
             border-radius: 4px;
             font-size: 0.85rem;
+        }
+
+        /* Badges visuales para los Estados */
+        .badge-estado {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            display: inline-block;
+        }
+        .estado-disponible {
+            background-color: #166534;
+            color: #DCFCE7;
+        }
+        .estado-pocas-unidades {
+            background-color: #854D0E;
+            color: #FEF9C3;
+        }
+        .estado-agotado {
+            background-color: #991B1B;
+            color: #FEE2E2;
         }
 
         .no-data {
@@ -196,7 +197,27 @@
                 </p>
                 <p>
                     <label for="genero">Género:</label>
-                    <input type="text" id="genero" name="genero">
+                    <input type="text" id="genero" name="genero" required>
+                </p>
+                <p>
+                    <label for="proveedor">Proveedor (ID/Número):</label>
+                    <input type="number" id="proveedor" name="proveedor" min="0" required>
+                </p>
+                <p>
+                    <label for="cantidad">Cantidad:</label>
+                    <input type="number" id="cantidad" name="cantidad" min="0" required>
+                </p>
+                <p>
+                    <label for="estado">Estado:</label>
+                    <select id="estado" name="estado" required>
+                        <option value="Disponible">Disponible</option>
+                        <option value="Pocas unidades">Pocas unidades</option>
+                        <option value="Agotado">Agotado</option>
+                    </select>
+                </p>
+                <p>
+                    <label for="precio_renta">Precio de Renta ($):</label>
+                    <input type="number" id="precio_renta" name="precio_renta" min="0" required>
                 </p>
                 <p>
                     <label for="comentarios">Comentarios / Reseña:</label>
@@ -221,7 +242,7 @@
             </form>
         
             <div id="resultado-consulta"
-                style="display: none; margin-top: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 8px;">
+                style="display: none; margin-top: 20px; padding: 15px; border: 1px solid #334155; border-radius: 8px; background-color: #0F172A;">
                 <h3>Resultado de la consulta</h3>
                 <p id="resultado-texto"></p>
             </div>
@@ -243,11 +264,15 @@
 
                     if (datos.encontrada) {
                         texto.innerHTML = `
-                        <strong>ID:</strong> ${datos.id}<br>
-                        <strong>Título:</strong> ${datos.titulo}<br>
-                        <strong>Género:</strong> ${datos.genero}<br>
-                        <strong>Comentarios:</strong> ${datos.comentarios}
-                    `;
+                            <strong>ID:</strong> ${datos.id}<br>
+                            <strong>Título:</strong> ${datos.titulo}<br>
+                            <strong>Género:</strong> ${datos.genero}<br>
+                            <strong>Proveedor:</strong> ${datos.proveedor}<br>
+                            <strong>Cantidad:</strong> ${datos.cantidad}<br>
+                            <strong>Estado:</strong> ${datos.estado}<br>
+                            <strong>Precio Renta:</strong> $${datos.precio_renta}<br>
+                            <strong>Comentarios:</strong> ${datos.comentarios || 'Sin comentarios'}
+                        `;
                     } else {
                         texto.textContent = datos.mensaje;
                     }
@@ -270,6 +295,10 @@
                             <th>ID</th>
                             <th>Título</th>
                             <th>Género</th>
+                            <th>Proveedor</th>
+                            <th>Cantidad</th>
+                            <th>Estado</th>
+                            <th>Precio Renta</th>
                             <th>Comentarios</th>
                         </tr>
                     </thead>
@@ -279,11 +308,19 @@
                             <td>{{ pelicula.id }}</td>
                             <td class="titulo-pelicula">{{ pelicula.titulo }}</td>
                             <td><span class="badge-genero">{{ pelicula.genero }}</span></td>
-                            <td>{{ pelicula.comentarios }}</td>
+                            <td>{{ pelicula.proveedor }}</td>
+                            <td>{{ pelicula.cantidad }}</td>
+                            <td>
+                                <span class="badge-estado estado-{{ pelicula.estado|slugify }}">
+                                    {{ pelicula.estado }}
+                                </span>
+                            </td>
+                            <td>${{ pelicula.precio_renta }}</td>
+                            <td>{{ pelicula.comentarios|default:"-" }}</td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="4" class="no-data">No hay películas registradas aún.</td>
+                            <td colspan="8" class="no-data">No hay películas registradas aún.</td>
                         </tr>
                         {% endfor %}
                     </tbody>

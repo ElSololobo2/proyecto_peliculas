@@ -7,9 +7,13 @@ def lista_peliculas(request):
         titulo = request.POST.get('titulo')
         genero = request.POST.get('genero')
         comentarios = request.POST.get('comentarios')
-        
+        proveedor = request.POST.get('Proveedor') or 0
+        cantidad = request.POST.get('cantidad') or 0
+        estado = request.POST.get('estado') or 'Disponible'
+        precio_renta = request.POST.get('precio_renta') or 0        
+
         if titulo:
-            Pelicula.objects.create(titulo=titulo, genero=genero, comentarios=comentarios)
+            Pelicula.objects.create(titulo=titulo, genero=genero, comentarios=comentarios, proveedor = int (proveedor), cantidad=int(cantidad), estado =estado, precio_renta= int(precio_renta))
         return redirect('lista_peliculas')
 
     peliculas = Pelicula.objects.all()
@@ -26,7 +30,11 @@ def consultar_pelicula(request):
             'id': pelicula.id,
             'titulo': pelicula.titulo,
             'genero': pelicula.genero,
-            'comentarios': pelicula.comentarios
+            'comentarios': pelicula.comentarios,
+            'proveedor': pelicula.proveedor,
+            'cantidad': pelicula.cantidad,
+            'estado': pelicula.estado,
+            'precio_renta': pelicula.precio_renta
         })
 
     except (Pelicula.DoesNotExist, ValueError, TypeError):
