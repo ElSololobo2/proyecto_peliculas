@@ -46,10 +46,10 @@ Antes de ejecutar el proyecto en tu computadora, asegúrate de tener instalado:
 
 Sigue estos pasos para clonar y poner en marcha el proyecto en tu equipo:
 ******
-IMPORTANTE 🐢
+🐻🪿IMPORTANTE 🐢🦆
 * Antes de empezar tienes que descargar esto: https://git--scm-com.translate.goog/install/windows?_x_tr_sl=en&_x_tr_tl=es&_x_tr_hl=es&_x_tr_pto=tc 
 * Descargar el git for windows/x64 Setup. Instalalo sin modificar nada, dale a continuar tal y como dice en la instalación.
-* Cada que entres a realizar alguna modificacion tienes que poner el siguiente codigo "venv\Scripts\activate"
+* Cada que entres a realizar alguna modificación tienes que poner el siguiente código "venv\Scripts\activate" para que no tengas errores.
 ******
 ### 1. Clonar el repositorio
 Abre tu terminal y clona el proyecto desde GitHub:
