@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema de Películas</title>
+</head>
+<body>
+    <h1>Sistema de Control de Películas</h1>
+
+    <h2>Registrar Nueva Película</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <p>
+            <label for="titulo">Título:</label><br>
+            <input type="text" id="titulo" name="titulo" required>
+        </p>
+        <p>
+            <label for="genero">Género:</label><br>
+            <input type="text" id="genero" name="genero">
+        </p>
+        <p>
+            <label for="comentarios">Comentarios / Reseña:</label><br>
+            <textarea id="comentarios" name="comentarios"></textarea>
+        </p>
+        <button type="submit">Guardar Película</button>
+    </form>
+
+    <hr>
+
+    <h2>Catálogo de Películas Registradas</h2>
+    <table border="1" cellpadding="8">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Género</th>
+                <th>Comentarios</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pelicula in peliculas %}
+            <tr>
+                <td>{{ pelicula.id }}</td>
+                <td>{{ pelicula.titulo }}</td>
+                <td>{{ pelicula.genero }}</td>
+                <td>{{ pelicula.comentarios }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No hay películas registradas aún.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
