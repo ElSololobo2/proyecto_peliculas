@@ -81,6 +81,26 @@
             border-color: #2563EB; 
         }
 
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            background-color: #0F172A;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            color: #FFFFFF;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        /* Efecto cuando haces clic para escribir */
+        input[type="number"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #2563EB; 
+        }
+
         button[type="submit"] {
             background-color: #2563EB; /* Botón azul llamativo pero no chillón */
             color: white;
@@ -185,6 +205,59 @@
                 <button type="submit">Guardar Película</button>
             </form>
         </section>
+
+        <hr>
+        
+        <section class="form-section">
+            <h2>Consultar películas individualmente</h2>
+        
+            <form id="form-consulta">
+                <p>
+                    <label for="id">ID de la película:</label>
+                    <input type="number" id="id" name="id" min="1" required>
+                </p>
+        
+                <button type="submit">Consultar</button>
+            </form>
+        
+            <div id="resultado-consulta"
+                style="display: none; margin-top: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 8px;">
+                <h3>Resultado de la consulta</h3>
+                <p id="resultado-texto"></p>
+            </div>
+        </section>
+        
+        <script>
+            document.getElementById('form-consulta').addEventListener('submit', async function (event) {
+                event.preventDefault();
+
+                const id = document.getElementById('id').value;
+                const resultado = document.getElementById('resultado-consulta');
+                const texto = document.getElementById('resultado-texto');
+
+                try {
+                    const respuesta = await fetch(`/consultar/?id=${encodeURIComponent(id)}`);
+                    const datos = await respuesta.json();
+
+                    resultado.style.display = 'block';
+
+                    if (datos.encontrada) {
+                        texto.innerHTML = `
+                        <strong>ID:</strong> ${datos.id}<br>
+                        <strong>Título:</strong> ${datos.titulo}<br>
+                        <strong>Género:</strong> ${datos.genero}<br>
+                        <strong>Comentarios:</strong> ${datos.comentarios}
+                    `;
+                    } else {
+                        texto.textContent = datos.mensaje;
+                    }
+
+                } catch (error) {
+                    resultado.style.display = 'block';
+                    texto.textContent = 'Ocurrió un error al realizar la consulta.';
+                }
+            });
+        </script>
 
         <hr>
 
