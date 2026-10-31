@@ -3,54 +3,220 @@
 <head>
     <meta charset="UTF-8">
     <title>Sistema de Películas</title>
+    <style>
+        /* ==========================================================================
+           1. Estilos Globales (Fondo Relajante)
+           ========================================================================== */
+        body {
+            background-color: #0F172A; /* Azul oscuro medianoche muy suave para los ojos */
+            color: #E2E8F0;            /* Texto gris claro/platino de alta legibilidad */
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #FFFFFF;
+            border-bottom: 2px solid #1E293B;
+            padding-bottom: 15px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #94A3B8;
+            font-size: 1.4rem;
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background: #1E293B;
+            margin: 40px 0;
+        }
+
+        /* ==========================================================================
+           2. Formulario de Registro Estilizado
+           ========================================================================== */
+        .form-section {
+            background-color: #1E293B; /* Tarjeta ligeramente más clara para contraste */
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        }
+
+        form p {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #38BDF8; /* Azul cielo sutil para identificar rápido el campo */
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            background-color: #0F172A;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            color: #FFFFFF;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        /* Efecto cuando haces clic para escribir */
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #2563EB; 
+        }
+
+        button[type="submit"] {
+            background-color: #2563EB; /* Botón azul llamativo pero no chillón */
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.2s;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #1D4ED8; /* Se oscurece un poco al pasar el mouse */
+        }
+
+        /* ==========================================================================
+           3. Tabla de Catálogo Moderna
+           ========================================================================== */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #1E293B;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #334155;
+            color: #FFFFFF;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* Líneas divisorias sutiles entre filas */
+        tr {
+            border-bottom: 1px solid #334155;
+        }
+
+        /* Efecto cebra: cambia de color filas alternas para leer mejor */
+        tbody tr:nth-child(even) {
+            background-color: #1E293B;
+        }
+        tbody tr:nth-child(odd) {
+            background-color: #162235;
+        }
+
+        .titulo-pelicula {
+            font-weight: bold;
+            color: #FFFFFF;
+        }
+
+        /* Una etiqueta visual bonita para los géneros */
+        .badge-genero {
+            background-color: #0284C7;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        .no-data {
+            text-align: center;
+            color: #64748B;
+            font-style: italic;
+        }
+    </style>
 </head>
 <body>
-    <h1>Sistema de Control de Películas Prueba chingonsona6767empiric</h1>
+    <main class="container">
+        <h1>Sistema de Control de Películas</h1>
 
-    <h2>Registrar Nueva Película</h2>
-    <form method="POST">
-        {% csrf_token %}
-        <p>
-            <label for="titulo">Título:</label><br>
-            <input type="text" id="titulo" name="titulo" required>
-        </p>
-        <p>
-            <label for="genero">Género:</label><br>
-            <input type="text" id="genero" name="genero">
-        </p>
-        <p>
-            <label for="comentarios">Comentarios / Reseña:</label><br>
-            <textarea id="comentarios" name="comentarios"></textarea>
-        </p>
-        <button type="submit">Guardar Película</button>
-    </form>
+        <section class="form-section">
+            <h2>Registrar Nueva Película</h2>
+            <form method="POST">
+                {% csrf_token %}
+                <p>
+                    <label for="titulo">Título:</label>
+                    <input type="text" id="titulo" name="titulo" required>
+                </p>
+                <p>
+                    <label for="genero">Género:</label>
+                    <input type="text" id="genero" name="genero">
+                </p>
+                <p>
+                    <label for="comentarios">Comentarios / Reseña:</label>
+                    <textarea id="comentarios" name="comentarios" rows="4"></textarea>
+                </p>
+                <button type="submit">Guardar Película</button>
+            </form>
+        </section>
 
-    <hr>
+        <hr>
 
-    <h2>Catálogo de Películas Registradas</h2>
-    <table border="1" cellpadding="8">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Título</th>
-                <th>Género</th>
-                <th>Comentarios</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for pelicula in peliculas %}
-            <tr>
-                <td>{{ pelicula.id }}</td>
-                <td>{{ pelicula.titulo }}</td>
-                <td>{{ pelicula.genero }}</td>
-                <td>{{ pelicula.comentarios }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="4">No hay películas registradas aún.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+        <section class="table-section">
+            <h2>Catálogo de Películas Registradas</h2>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Título</th>
+                            <th>Género</th>
+                            <th>Comentarios</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pelicula in peliculas %}
+                        <tr>
+                            <td>{{ pelicula.id }}</td>
+                            <td class="titulo-pelicula">{{ pelicula.titulo }}</td>
+                            <td><span class="badge-genero">{{ pelicula.genero }}</span></td>
+                            <td>{{ pelicula.comentarios }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="no-data">No hay películas registradas aún.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
 </body>
 </html>
