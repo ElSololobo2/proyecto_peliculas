@@ -47,7 +47,7 @@ Antes de ejecutar el proyecto en tu computadora, asegúrate de tener instalado:
 Sigue estos pasos para clonar y poner en marcha el proyecto en tu equipo:
 ******
 Antes de empezar tienes que descargar esto: https://git--scm-com.translate.goog/install/windows?_x_tr_sl=en&_x_tr_tl=es&_x_tr_hl=es&_x_tr_pto=tc 
-y descargar el git for windows/x64 Setup. Instalalo sin modificar nada, dale a continuar tal y como dice en la instalación.
+* Descargar el git for windows/x64 Setup. Instalalo sin modificar nada, dale a continuar tal y como dice en la instalación.
 ******
 ### 1. Clonar el repositorio
 Abre tu terminal y clona el proyecto desde GitHub:
