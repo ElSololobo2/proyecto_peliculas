@@ -5,8 +5,8 @@
     <title>Sistema de peliculas</title>
     <style>
         /* ==========================================================================
-           1. Estilos Globales (Fondo Relajante)
-           ========================================================================== */
+            1. Estilos Globales (Fondo Relajante)
+            ========================================================================== */
         body {
             background-color: #0F172A; /* Azul oscuro medianoche */
             color: #E2E8F0;            /* Texto gris claro/platino */
@@ -41,13 +41,14 @@
         }
 
         /* ==========================================================================
-           2. Formulario de Registro Estilizado
-           ========================================================================== */
+            2. Formulario de Registro y Edición Estilizado
+            ========================================================================== */
         .form-section {
             background-color: #1E293B;
             padding: 25px;
             border-radius: 8px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
         }
 
         form p {
@@ -84,7 +85,7 @@
             border-color: #2563EB; 
         }
 
-        button[type="submit"] {
+        button[type="submit"], .btn-accion {
             background-color: #2563EB;
             color: white;
             border: none;
@@ -97,13 +98,32 @@
             transition: background-color 0.2s;
         }
 
-        button[type="submit"]:hover {
+        button[type="submit"]:hover, .btn-accion:hover {
             background-color: #1D4ED8;
         }
 
+        .btn-editar {
+            background-color: #0284C7;
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            width: auto;
+            display: inline-block;
+        }
+        .btn-editar:hover {
+            background-color: #0369A1;
+        }
+
+        .btn-cancelar {
+            background-color: #64748B;
+            margin-top: 10px;
+        }
+        .btn-cancelar:hover {
+            background-color: #475569;
+        }
+
         /* ==========================================================================
-           3. Tabla de Catálogo Moderna y Badges
-           ========================================================================== */
+            3. Tabla de Catálogo Moderna y Badges
+            ========================================================================== */
         .table-responsive {
             overflow-x: auto;
         }
@@ -155,7 +175,6 @@
             font-size: 0.85rem;
         }
 
-        /* Badges visuales para los Estados */
         .badge-estado {
             padding: 4px 8px;
             border-radius: 12px;
@@ -187,9 +206,10 @@
     <main class="container">
         <h1>Sistema de peliculas</h1>
 
-        <section class="form-section">
+        <!-- SECCIÓN DE REGISTRO -->
+        <section class="form-section" id="seccion-registro">
             <h2>Registrar Nueva Película</h2>
-            <form method="POST">
+            <form method="POST" action="">
                 {% csrf_token %}
                 <p>
                     <label for="titulo">Título:</label>
@@ -227,65 +247,71 @@
             </form>
         </section>
 
+        <!-- SECCIÓN DE EDICIÓN (Oculta por defecto) -->
+        <section class="form-section" id="seccion-edicion" style="display: none; border: 2px solid #0284C7;">
+            <h2>Editar Película (ID: <span id="edit-id-label"></span>)</h2>
+            <form method="POST" id="form-editar" action="">
+                {% csrf_token %}
+                <input type="hidden" id="edit_id" name="pelicula_id">
+                <p>
+                    <label for="edit_titulo">Título:</label>
+                    <input type="text" id="edit_titulo" name="titulo" required>
+                </p>
+                <p>
+                    <label for="edit_genero">Género:</label>
+                    <input type="text" id="edit_genero" name="genero" required>
+                </p>
+                <p>
+                    <label for="edit_proveedor">Proveedor (ID/Número):</label>
+                    <input type="number" id="edit_proveedor" name="proveedor" min="0" required>
+                </p>
+                <p>
+                    <label for="edit_cantidad">Cantidad:</label>
+                    <input type="number" id="edit_cantidad" name="cantidad" min="0" required>
+                </p>
+                <p>
+                    <label for="edit_estado">Estado:</label>
+                    <select id="edit_estado" name="estado" required>
+                        <option value="Disponible">Disponible</option>
+                        <option value="Pocas unidades">Pocas unidades</option>
+                        <option value="Agotado">Agotado</option>
+                    </select>
+                </p>
+                <p>
+                    <label for="edit_precio_renta">Precio de Renta ($):</label>
+                    <input type="number" id="edit_precio_renta" name="precio_renta" min="0" required>
+                </p>
+                <p>
+                    <label for="edit_comentarios">Comentarios / Reseña:</label>
+                    <textarea id="edit_comentarios" name="comentarios" rows="4"></textarea>
+                </p>
+                <button type="submit" class="btn-accion">Actualizar Película</button>
+                <button type="button" class="btn-accion btn-cancelar" onclick="cancelarEdicion()">Cancelar</button>
+            </form>
+        </section>
+
         <hr>
         
+        <!-- CONSULTA INDIVIDUAL -->
         <section class="form-section">
             <h2>Consultar películas individualmente</h2>
-        
             <form id="form-consulta">
                 <p>
                     <label for="id">ID de la película:</label>
                     <input type="number" id="id" name="id" min="1" required>
                 </p>
-        
                 <button type="submit">Consultar</button>
             </form>
         
-            <div id="resultado-consulta"
-                style="display: none; margin-top: 20px; padding: 15px; border: 1px solid #334155; border-radius: 8px; background-color: #0F172A;">
+            <div id="resultado-consulta" style="display: none; margin-top: 20px; padding: 15px; border: 1px solid #334155; border-radius: 8px; background-color: #0F172A;">
                 <h3>Resultado de la consulta</h3>
                 <p id="resultado-texto"></p>
             </div>
         </section>
         
-        <script>
-            document.getElementById('form-consulta').addEventListener('submit', async function (event) {
-                event.preventDefault();
-
-                const id = document.getElementById('id').value;
-                const resultado = document.getElementById('resultado-consulta');
-                const texto = document.getElementById('resultado-texto');
-
-                try {
-                    const respuesta = await fetch(`/consultar/?id=${encodeURIComponent(id)}`);
-                    const datos = await respuesta.json();
-
-                    resultado.style.display = 'block';
-
-                    if (datos.encontrada) {
-                        texto.innerHTML = `
-                            <strong>ID:</strong> ${datos.id}<br>
-                            <strong>Título:</strong> ${datos.titulo}<br>
-                            <strong>Género:</strong> ${datos.genero}<br>
-                            <strong>Proveedor:</strong> ${datos.proveedor}<br>
-                            <strong>Cantidad:</strong> ${datos.cantidad}<br>
-                            <strong>Estado:</strong> ${datos.estado}<br>
-                            <strong>Precio Renta:</strong> $${datos.precio_renta}<br>
-                            <strong>Comentarios:</strong> ${datos.comentarios || 'Sin comentarios'}
-                        `;
-                    } else {
-                        texto.textContent = datos.mensaje;
-                    }
-
-                } catch (error) {
-                    resultado.style.display = 'block';
-                    texto.textContent = 'Ocurrió un error al realizar la consulta.';
-                }
-            });
-        </script>
-
         <hr>
 
+        <!-- TABLA DE CATÁLOGO -->
         <section class="table-section">
             <h2>Catálogo de Películas Registradas</h2>
             <div class="table-responsive">
@@ -300,6 +326,7 @@
                             <th>Estado</th>
                             <th>Precio Renta</th>
                             <th>Comentarios</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -317,10 +344,22 @@
                             </td>
                             <td>${{ pelicula.precio_renta }}</td>
                             <td>{{ pelicula.comentarios|default:"-" }}</td>
+                            <td>
+                                <button type="button" class="btn-accion btn-editar" onclick="cargarEdicion(
+                                    '{{ pelicula.id }}',
+                                    '{{ pelicula.titulo|escapejs }}',
+                                    '{{ pelicula.genero|escapejs }}',
+                                    '{{ pelicula.proveedor }}',
+                                    '{{ pelicula.cantidad }}',
+                                    '{{ pelicula.estado }}',
+                                    '{{ pelicula.precio_renta }}',
+                                    '{{ pelicula.comentarios|default:""|escapejs }}'
+                                )">Editar</button>
+                            </td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="8" class="no-data">No hay películas registradas aún.</td>
+                            <td colspan="9" class="no-data">No hay películas registradas aún.</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -328,5 +367,68 @@
             </div>
         </section>
     </main>
+
+    <script>
+        // Lógica para el formulario de consulta individual
+        document.getElementById('form-consulta').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const id = document.getElementById('id').value;
+            const resultado = document.getElementById('resultado-consulta');
+            const texto = document.getElementById('resultado-texto');
+
+            try {
+                const respuesta = await fetch(`/consultar/?id=${encodeURIComponent(id)}`);
+                const datos = await respuesta.json();
+
+                resultado.style.display = 'block';
+
+                if (datos.encontrada) {
+                    texto.innerHTML = `
+                        <strong>ID:</strong> ${datos.id}<br>
+                        <strong>Título:</strong> ${datos.titulo}<br>
+                        <strong>Género:</strong> ${datos.genero}<br>
+                        <strong>Proveedor:</strong> ${datos.proveedor}<br>
+                        <strong>Cantidad:</strong> ${datos.cantidad}<br>
+                        <strong>Estado:</strong> ${datos.estado}<br>
+                        <strong>Precio Renta:</strong> $${datos.precio_renta}<br>
+                        <strong>Comentarios:</strong> ${datos.comentarios || 'Sin comentarios'}
+                    `;
+                } else {
+                    texto.textContent = datos.mensaje;
+                }
+
+            } catch (error) {
+                resultado.style.display = 'block';
+                texto.textContent = 'Ocurrió un error al realizar la consulta.';
+            }
+        });
+
+        // Funciones para manejar la edición
+        function cargarEdicion(id, titulo, genero, proveedor, cantidad, estado, precio_renta, comentarios) {
+            // Mostrar formulario de edición y ocultar registro
+            document.getElementById('seccion-registro').style.display = 'none';
+            document.getElementById('seccion-edicion').style.display = 'block';
+
+            // Rellenar campos
+            document.getElementById('edit-id-label').textContent = id;
+            document.getElementById('edit_id').value = id;
+            document.getElementById('edit_titulo').value = titulo;
+            document.getElementById('edit_genero').value = genero;
+            document.getElementById('edit_proveedor').value = proveedor;
+            document.getElementById('edit_cantidad').value = cantidad;
+            document.getElementById('edit_estado').value = estado;
+            document.getElementById('edit_precio_renta').value = precio_renta;
+            document.getElementById('edit_comentarios').value = comentarios;
+
+            // Desplazar la vista hacia el formulario de edición
+            document.getElementById('seccion-edicion').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function cancelarEdicion() {
+            document.getElementById('seccion-edicion').style.display = 'none';
+            document.getElementById('seccion-registro').style.display = 'block';
+        }
+    </script>
 </body>
 </html>
