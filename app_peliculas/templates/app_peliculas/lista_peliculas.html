@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Sistema de peliculas</title>
@@ -8,8 +9,10 @@
             1. Estilos Globales (Fondo Relajante)
             ========================================================================== */
         body {
-            background-color: #0F172A; /* Azul oscuro medianoche */
-            color: #E2E8F0;            /* Texto gris claro/platino */
+            background-color: #0F172A;
+            /* Azul oscuro medianoche */
+            color: #E2E8F0;
+            /* Texto gris claro/platino */
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             line-height: 1.5;
             margin: 0;
@@ -59,7 +62,8 @@
             display: block;
             font-weight: 600;
             margin-bottom: 6px;
-            color: #38BDF8; /* Azul cielo */
+            color: #38BDF8;
+            /* Azul cielo */
         }
 
         input[type="text"],
@@ -82,10 +86,11 @@
         select:focus,
         textarea:focus {
             outline: none;
-            border-color: #2563EB; 
+            border-color: #2563EB;
         }
 
-        button[type="submit"], .btn-accion {
+        button[type="submit"],
+        .btn-accion {
             background-color: #2563EB;
             color: white;
             border: none;
@@ -98,7 +103,8 @@
             transition: background-color 0.2s;
         }
 
-        button[type="submit"]:hover, .btn-accion:hover {
+        button[type="submit"]:hover,
+        .btn-accion:hover {
             background-color: #1D4ED8;
         }
 
@@ -109,6 +115,7 @@
             width: auto;
             display: inline-block;
         }
+
         .btn-editar:hover {
             background-color: #0369A1;
         }
@@ -117,8 +124,38 @@
             background-color: #64748B;
             margin-top: 10px;
         }
+
         .btn-cancelar:hover {
             background-color: #475569;
+        }
+
+        /* Botón para eliminar una película */
+        .table-section .btn-eliminar {
+            background-color: #DC2626;
+            color: white;
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            width: auto;
+            display: inline-block;
+        }
+
+        /* Cambio de color al pasar el cursor */
+        .table-section .btn-eliminar:hover {
+            background-color: #991B1B;
+        }
+
+        /* Organización de los botones de acciones */
+        .acciones-pelicula {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* Evita que el formulario de eliminación ocupe espacio adicional */
+        .acciones-pelicula form {
+            margin: 0;
         }
 
         /* ==========================================================================
@@ -137,7 +174,8 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
         }
 
-        th, td {
+        th,
+        td {
             padding: 12px 15px;
             text-align: left;
         }
@@ -158,6 +196,7 @@
         tbody tr:nth-child(even) {
             background-color: #1E293B;
         }
+
         tbody tr:nth-child(odd) {
             background-color: #162235;
         }
@@ -182,14 +221,17 @@
             font-size: 0.8rem;
             display: inline-block;
         }
+
         .estado-disponible {
             background-color: #166534;
             color: #DCFCE7;
         }
+
         .estado-pocas-unidades {
             background-color: #854D0E;
             color: #FEF9C3;
         }
+
         .estado-agotado {
             background-color: #991B1B;
             color: #FEE2E2;
@@ -202,6 +244,7 @@
         }
     </style>
 </head>
+
 <body>
     <main class="container">
         <h1>Sistema de peliculas</h1>
@@ -291,7 +334,7 @@
         </section>
 
         <hr>
-        
+
         <!-- CONSULTA INDIVIDUAL -->
         <section class="form-section">
             <h2>Consultar películas individualmente</h2>
@@ -302,13 +345,14 @@
                 </p>
                 <button type="submit">Consultar</button>
             </form>
-        
-            <div id="resultado-consulta" style="display: none; margin-top: 20px; padding: 15px; border: 1px solid #334155; border-radius: 8px; background-color: #0F172A;">
+
+            <div id="resultado-consulta"
+                style="display: none; margin-top: 20px; padding: 15px; border: 1px solid #334155; border-radius: 8px; background-color: #0F172A;">
                 <h3>Resultado de la consulta</h3>
                 <p id="resultado-texto"></p>
             </div>
         </section>
-        
+
         <hr>
 
         <!-- TABLA DE CATÁLOGO -->
@@ -344,18 +388,42 @@
                             </td>
                             <td>${{ pelicula.precio_renta }}</td>
                             <td>{{ pelicula.comentarios|default:"-" }}</td>
+
+                            <!-- Columna de acciones para cada película -->
                             <td>
-                                <button type="button" class="btn-accion btn-editar" onclick="cargarEdicion(
-                                    '{{ pelicula.id }}',
-                                    '{{ pelicula.titulo|escapejs }}',
-                                    '{{ pelicula.genero|escapejs }}',
-                                    '{{ pelicula.proveedor }}',
-                                    '{{ pelicula.cantidad }}',
-                                    '{{ pelicula.estado }}',
-                                    '{{ pelicula.precio_renta }}',
-                                    '{{ pelicula.comentarios|default:""|escapejs }}'
-                                )">Editar</button>
+                                <div class="acciones-pelicula">
+
+                                    <!-- Botón para editar los datos de la película -->
+                                    <button type="button" class="btn-accion btn-editar" onclick='cargarEdicion(
+                    "{{ pelicula.id }}",
+                    "{{ pelicula.titulo|escapejs }}",
+                    "{{ pelicula.genero|escapejs }}",
+                    "{{ pelicula.proveedor }}",
+                    "{{ pelicula.cantidad }}",
+                    "{{ pelicula.estado|escapejs }}",
+                    "{{ pelicula.precio_renta }}",
+                    "{{ pelicula.comentarios|escapejs }}"
+                )'>
+                                        Editar
+                                    </button>
+
+                                    <!-- Formulario para eliminar la película seleccionada -->
+                                    <form method="POST" action="{% url 'eliminar_pelicula' pelicula.id %}"
+                                        onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta película?');">
+
+                                        <!-- Protección contra solicitudes CSRF -->
+                                        {% csrf_token %}
+
+                                        <!-- Botón que ejecuta la eliminación -->
+                                        <button type="submit" class="btn-accion btn-eliminar">
+                                            Eliminar
+                                        </button>
+
+                                    </form>
+
+                                </div>
                             </td>
+
                         </tr>
                         {% empty %}
                         <tr>
@@ -431,4 +499,5 @@
         }
     </script>
 </body>
+
 </html>
